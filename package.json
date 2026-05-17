@@ -1,0 +1,17 @@
+{
+  "name": "preentrega",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Guadalupe Flores Cottet",
+  "license": "ISC",
+  "description": "Curso Node.JS 2026"
+}
