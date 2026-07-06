@@ -42,6 +42,16 @@ app.use((req, res, next) => {
 
 app.use("/api", productsRouter);
 app.use("/auth", router)
+app.get("/", (req, res) => {
+    res.json({
+        message: "NodeJS Project API is running 🚀",
+        endpoints: [
+            "/api/products",
+            "/auth/login"
+        ]
+    });
+});
+
 
 app.use(function(req, res, next){
     res.status(404).send("Route not found")
