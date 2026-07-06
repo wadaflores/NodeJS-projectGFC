@@ -4,6 +4,8 @@ logs
 npm-debug.log*
 
 node_modules
+preentrega
+entrega
 examples
 dist
 dist-ssr

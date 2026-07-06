@@ -1,10 +1,20 @@
-# Node.JS Project - Talento Tech 2026
+# Node.js Project - Talento Tech 2026
 
-This is Guadalupe's project for a Node.JS course @Talento Tech.
+This is Guadalupe's final project for the Node.js course @Talento Tech.
 
-## Usage
+A REST API developed with Node.js and Express that allows product management through CRUD operations, using Firebase Firestore as cloud database and JWT authentication for protected routes.
 
-npm start GET products
-npm start GET products/5
-npm start POST products T-Shirt-Rex 300 Shirts
-npm start DELETE products/5
+## Technologies
+
+- Node.js
+- Express.js
+- Firebase Firestore
+- JSON Web Token (JWT)
+- CORS
+- dotenv
+
+## Installation
+
+Clone the repository:
+
+git clone https://github.com/wadaflores/NodeJS-projectGFC.git

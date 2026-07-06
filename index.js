@@ -1,145 +1,52 @@
-console.log("Starting program...");
+console.log("Program starting...");
+import express from "express";
+import productsRouter from "./src/routes/products.routes.js";
+import router from "./src/routes/auth.routes.js";
+import cors from "cors";
+import 'dotenv/config';
 
-const URL_API = "https://fakestoreapi.com";
+const app = express();
 
-const args = process.argv.slice(2);
+/*
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://example.com');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+}); 
 
-//console.log("ARGS:", args);
+ESTO SE REEMPLAZA POR CORS:
+*/
+const PORT = process.env.PORT || 3000;
 
-const valid_args = ["GET", "POST", "DELETE"];
-
-async function getAllProducts() {
-    const response = await fetch(`${URL_API}/products`);
-
-    if (!response.ok) {
-        throw new Error("Error getting products");
-    }
-
-    const data = await response.json();
-    console.log(data);
-}
-
-async function getOneProduct(id) {
-    const response = await fetch(`${URL_API}/products/${id}`);
-
-    if (!response.ok) {
-        throw new Error("Error getting product " + id);
-    }
-
-    const data = await response.json();
-    console.log(data);
-}
-
-async function createProduct(title, price, category) {
-    const response = await fetch(`${URL_API}/products`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title,
-            price,
-            category
-        })
-    });
-
-    if (!response.ok) {
-        throw new Error("Error creating product");
-    }
-
-    const data = await response.json();
-
-    console.log("Product created:");
-    console.log(data);
-}
-
-async function deleteProduct(id) {
-    const response = await fetch(`${URL_API}/products/${id}`, {
-        method: "DELETE"
-    });
-
-    if (!response.ok) {
-        throw new Error("Error deleting product");
-    }
-
-    const data = await response.json();
-
-    console.log("Product deleted:");
-    console.log(data);
-}
-
-async function mainProgram() {
-
-    const [method, route, ...data] = args;
-
-    if (!valid_args.includes(method)) {
-        console.log("Invalid command");
-        return;
-    }
-
-    if (!route || !route.startsWith("products")) {
-        console.log("Invalid route");
-        return;
-    }
-
-    try {
-        // GET products
-        if (method === "GET" && route === "products") {
-            await getAllProducts();
-            return;
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || origin === `http://localhost:${PORT}`){
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
         }
+    },
 
-        // GET products/5
-        if (method === "GET" && route.startsWith("products/")) {
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
-            const id = parseInt(route.split("/")[1]);
+app.use(express.json());
 
-            if(isNaN(id)){
-                throw new Error("ID must be a number");
-            }
+app.use((req, res, next) => {
+    console.log(`Data received: ${req.method} ${req.url}`);
+    next();
+});
 
-            await getOneProduct(id);
-            return;
-        }
+app.use("/api", productsRouter);
+app.use("/auth", router)
 
-        // POST products title price category
-        if (method === "POST" && route === "products") {
+app.use(function(req, res, next){
+    res.status(404).send("Route not found")
+});
 
-            const [title, price, category] = data;
-
-            if (!title || !price || !category) {
-                throw new Error("Data missing");
-            }
-
-            if (!Number(price)) {
-                throw new Error("Price must be a number");
-            }
-
-            await createProduct(title, price, category);
-
-            return;
-        }
-
-        // DELETE products/5
-        if (method === "DELETE" && route.startsWith("products/")) {
-
-            const id = route.split("/")[1];
-            if(!id){
-                throw new Error("ID is necessary");
-            }
-
-            await deleteProduct(id);
-
-            return;
-        }
-
-        console.log("Unrecognized command");
-
-    } catch (error) {
-        //console.log("Entra en este error")
-        console.log("Error:", error.message);
-
-    }
-}
-
-mainProgram();
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
