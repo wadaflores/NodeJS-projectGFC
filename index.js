@@ -46,8 +46,9 @@ app.get("/", (req, res) => {
     res.json({
         message: "NodeJS Project API is running 🚀",
         endpoints: [
+            "Routes without auth:",
             "/api/products",
-            "/auth/login"
+            "/api/products/PRODUCT_ID ex: init",
         ]
     });
 });
